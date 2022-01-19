@@ -1,6 +1,5 @@
 let color = '#3aa757';
 
-let current_url = "";
 let current_window_id = 0;
 
 chrome.runtime.onInstalled.addListener(() => {
@@ -72,7 +71,7 @@ chrome.runtime.onMessage.addListener(
       console.log(request);
       console.log("----------------------------------------");
       
-      chrome.tabs.query({url: sender.tab.url}, function(tabs){
+      chrome.tabs.query({url: request.url}, function(tabs){
         
         if(tabs.length > 1) {
           chrome.action.setBadgeText({tabId: sender.tab.id, text: "1"}, function(){
@@ -80,12 +79,12 @@ chrome.runtime.onMessage.addListener(
           });
           
           for(let i = 0;i < tabs.length;i++) {
-            let tab = tabs[i];
-            // console.debug(`debug:${tab.windowId}  vs ${current_window_id}`);
-            if(tab.windowId != current_window_id) {
+            let a_tab = tabs[i];
+            console.debug(`current window id:${current_window_id}, tag id:${a_tab.windowId}`);
+            if(a_tab.windowId !== current_window_id) {
               // console.log("target tab:", tab);
-              console.log(`Bridge message '${request.event}' to tab ${tab.id}`);
-              chrome.tabs.sendMessage(tab.id, request, function(response) {
+              console.log(`Bridge message '${request.event}' to tab ${a_tab.id}`);
+              chrome.tabs.sendMessage(a_tab.id, request, function(response) {
                 // console.log(response.farewell);
               });
             }
