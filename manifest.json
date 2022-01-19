@@ -1,6 +1,6 @@
 {
-  "name": "Getting Started Example",
-  "description": "Build an Extension!",
+  "name": "Double Sync",
+  "description": "Sync your operation between windows",
   "version": "1.0",
   "manifest_version": 3,
   "background": {

@@ -1,6 +1,4 @@
 window.addEventListener('scroll', function(e) {
-    // let last_known_scroll_position = window.scrollY;
-    // console.log(`window.scrollY:${window.scrollY}`);
     chrome.runtime.sendMessage({url: window.location.href, scrolly: window.scrollY});
     
 });
