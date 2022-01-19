@@ -13,7 +13,9 @@ chrome.action.onClicked.addListener(async (tab) => {
   // let [current_tab] = await chrome.tabs.query({ active: true, currentWindow: true });  
   console.log("chrome.action.onClick on current tab", tab);
   if(tab && tab.url.startsWith("http://") || tab.url.startsWith("https://")) {
-    chrome.windows.getLastFocused({populate: false}, function(currentWindow) {        
+    chrome.windows.getLastFocused({populate: false}, function(currentWindow) {
+      console.log(currentWindow);
+      console.log("2@@@@@@@@@@@@@@@@@@@@@@");
       let new_width = parseInt(currentWindow.width/2);
       chrome.windows.update(currentWindow.id, { top:currentWindow.top, left:0, width: new_width, state: "normal" }, function(){
         chrome.windows.create({focused:false, url: tab.url, width: new_width, left: currentWindow.left+new_width });
@@ -25,8 +27,6 @@ chrome.action.onClicked.addListener(async (tab) => {
 chrome.windows.onFocusChanged.addListener(function(windowId) {
   current_window_id = windowId;
 });
-
-
 
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
 //   active: true
@@ -61,9 +61,7 @@ chrome.tabs.onActivated.addListener(function(activeInfo) {
  chrome.tabs.get(activeInfo.tabId, function(tab){
   //console.log("onActivated:", tab);
  });
-}); 
-
-
+});
 
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
@@ -75,18 +73,30 @@ chrome.runtime.onMessage.addListener(
       console.log("----------------------------------------");
       
       chrome.tabs.query({url: sender.tab.url}, function(tabs){
-        // console.log("all tabs:", tabs);
-        for(let i = 0;i < tabs.length;i++) {
-          let tab = tabs[i];
-          // console.debug(`debug:${tab.windowId}  vs ${current_window_id}`);
-          if(tab.windowId != current_window_id) {
-            // console.log("target tab:", tab);
-            console.log(`Notify event '${request.event}' to tab ${tab.id}, ${request}`);
-            chrome.tabs.sendMessage(tab.id, request, function(response) {
-              // console.log(response.farewell);
-            });
+        
+        if(tabs.length > 1) {
+          chrome.action.setBadgeText({tabId: sender.tab.id, text: "1"}, function(){
+            //console.table(tabs);
+          });
+          
+          for(let i = 0;i < tabs.length;i++) {
+            let tab = tabs[i];
+            // console.debug(`debug:${tab.windowId}  vs ${current_window_id}`);
+            if(tab.windowId != current_window_id) {
+              // console.log("target tab:", tab);
+              console.log(`Bridge message '${request.event}' to tab ${tab.id}`);
+              chrome.tabs.sendMessage(tab.id, request, function(response) {
+                // console.log(response.farewell);
+              });
+            }
           }
+          
+        } else {
+          chrome.action.setBadgeText({tabId: sender.tab.id, text: "0"}, function(){
+            
+          });
         }
+        
         
       });
       
