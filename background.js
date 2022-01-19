@@ -71,9 +71,11 @@ chrome.tabs.onActivated.addListener(function(activeInfo) {
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
     if(sender.tab) {
-      console.log(`Recv from tab ${sender.tab.url}:`);
+      console.log(`Recv message from sender.tab:`, sender);
+      current_window_id = sender.tab.windowId;
+      console.log("------------- message ------------------");
       console.log(request);
-      console.log("-------------------");
+      console.log("----------------------------------------");
       
       chrome.tabs.query({url: sender.tab.url}, function(tabs){
         // console.log("all tabs:", tabs);
