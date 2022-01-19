@@ -7,7 +7,9 @@
     "service_worker": "background.js"
   },
   "content_scripts":[{
-    "matches":["http://*/*","https://*/*"],
+    "matches": [
+      "<all_urls>"
+    ],
     "js": ["content.js"]
   }],
 
@@ -26,5 +28,8 @@
     "48": "/images/get_started48.png",
     "128": "/images/get_started128.png"
   },
+  "web_accessible_resources": [
+    {"resources":["images/arrow-pointer.png"],"matches": ["<all_urls>"]}
+  ],
   "options_page": "options.html"
 }

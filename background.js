@@ -82,8 +82,8 @@ chrome.runtime.onMessage.addListener(
           // console.debug(`debug:${tab.windowId}  vs ${current_window_id}`);
           if(tab.windowId != current_window_id) {
             // console.log("target tab:", tab);
-            console.log(`Notify sync_event 'scroll' to tab ${tab.id}`);
-            chrome.tabs.sendMessage(tab.id, {sync_event: "scroll", scrolly: request.scrolly}, function(response) {
+            console.log(`Notify event '${request.event}' to tab ${tab.id}, ${request}`);
+            chrome.tabs.sendMessage(tab.id, request, function(response) {
               // console.log(response.farewell);
             });
           }
