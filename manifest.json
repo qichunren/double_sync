@@ -4,13 +4,13 @@
   "version": "1.0",
   "manifest_version": 3,
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "js/background.js"
   },
   "content_scripts":[{
     "matches": [
       "<all_urls>"
     ],
-    "js": ["content.js"]
+    "js": ["js/content.js"]
   }],
 
   "permissions": ["storage", "activeTab", "scripting", "tabs"],
