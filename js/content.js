@@ -71,6 +71,15 @@ document.addEventListener('click', function(e) {
   var target = e.target;
 }, false);
 
+document.addEventListener("mouseover", function(e){
+  let t = e.target;
+  console.log("hover element", t.nodeName);
+  let x_path = getXPath(t);
+  if(t.nodeName !== "TABLE" && t.nodeName !== "HTML" && t.nodeName !== "BODY" && t.nodeName !== "IMG" ) {
+    chrome.runtime.sendMessage({event: "mouseover", url: window.location.href, xpath: x_path});
+  }
+});
+
 window.addEventListener('scroll', function(e) {  
   if(pointer_clone.style.display == "none") {
     chrome.runtime.sendMessage({event: "scroll", url: window.location.href, scrolly: window.scrollY});
@@ -82,6 +91,7 @@ window.addEventListener('mousemove', function(e) {
   chrome.runtime.sendMessage({event: "mousemove", url: window.location.href, client_x: e.clientX, client_y: e.clientY});
 });
   
+var hover_element = null;
 chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
       console.log(sender.tab ? "from a content script:" + sender.tab.url : "from the extension");
@@ -89,10 +99,17 @@ chrome.runtime.onMessage.addListener(
       pointer_clone.style.display = "block";
       if(request.event == "scroll") {
         window.scrollTo(0, request.scrolly);
-      } else if(request.event == "mousemove") {                
+      } else if(request.event == "mousemove") {
         pointer_clone.style.left = "" + request.client_x + "px";
         pointer_clone.style.top = "" + request.client_y + "px";
         console.log("Force set pointer positoin");
+      } else if(request.event == "mouseover") {
+        if(hover_element) {
+          hover_element.classList.remove("__hover_highlight__qcr");
+        }
+        let hover_e = getElementByXpath(request.xpath);        
+        hover_e.classList.add("__hover_highlight__qcr");
+        hover_element = hover_e;
       }
 
       sendResponse();

@@ -10,7 +10,8 @@
     "matches": [
       "<all_urls>"
     ],
-    "js": ["js/content.js"]
+    "js": ["js/content.js"],
+    "css": ["css/content.css"]
   }],
 
   "permissions": ["storage", "activeTab", "scripting", "tabs"],
@@ -27,7 +28,7 @@
     "128": "/images/icon128.png"
   },
   "web_accessible_resources": [
-    {"resources":["images/arrow-pointer.png"],"matches": ["<all_urls>"]}
+    {"resources":["images/arrow-pointer.png", "css/content.css"],"matches": ["<all_urls>"]}
   ],
   "options_page": "options.html"
 }
