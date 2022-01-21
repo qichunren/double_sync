@@ -1,3 +1,4 @@
+var hover_element = null;
 var pointer_clone = document.createElement("img");
 pointer_clone.id = "double_sync_pointer";
 pointer_clone.src = chrome.runtime.getURL("./images/arrow-pointer.png");
@@ -66,9 +67,16 @@ function getElementByXpath(path) {
   return document.evaluate(path, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
 }
 
+window.addEventListener("focus", function(event){
+  if(hover_element) {
+    hover_element.classList.remove("__hover_highlight__qcr");
+  }
+});
+
 document.addEventListener('click', function(e) {
   e = e || window.event;
   var target = e.target;
+
 }, false);
 
 document.addEventListener("mouseover", function(e){
@@ -91,7 +99,6 @@ window.addEventListener('mousemove', function(e) {
   chrome.runtime.sendMessage({event: "mousemove", url: window.location.href, client_x: e.clientX, client_y: e.clientY});
 });
   
-var hover_element = null;
 chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
       console.log(sender.tab ? "from a content script:" + sender.tab.url : "from the extension");
