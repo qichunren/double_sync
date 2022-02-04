@@ -2,6 +2,8 @@
 
 [double_sync](https://github.com/qichunren/double_sync) is a Chrome extension, use it to split current webpage window into two windows layout tother, and sync events between two windows.
 
+![Deomo](https://raw.githubusercontent.com/qichunren/double_sync/main/images/demo.gif "Demo")
+
 ## Development
 
 ### Get started
