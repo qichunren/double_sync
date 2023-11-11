@@ -81,11 +81,14 @@ document.addEventListener('click', function(e) {
 
 document.addEventListener("mouseover", function(e){
   let t = e.target;
-  console.log("hover element", t.nodeName);
   let x_path = getXPath(t);
-  if(t.nodeName !== "TABLE" && t.nodeName !== "HTML" && t.nodeName !== "BODY" && t.nodeName !== "IMG" ) {
-    chrome.runtime.sendMessage({event: "mouseover", url: window.location.href, xpath: x_path});
+  
+  if(t.childElementCount > 5 || t.clientHeight > window.innerHeight / 2 || t.nodeName == "IMG" || t.nodeName == "TABLE" || t.nodeName == "HTML" || t.nodeName == "BODY") {
+    e.stopPropagation();
+    return false;
   }
+
+  chrome.runtime.sendMessage({event: "mouseover", url: window.location.href, xpath: x_path});
 });
 
 window.addEventListener('scroll', function(e) {
@@ -109,6 +112,7 @@ chrome.runtime.onMessage.addListener(
         pointer_clone.style.top = "" + request.client_y + "px";
         console.log("Force set pointer positoin");
       } else if(request.event == "mouseover") {
+        // When received mouseover event from another window, simulate mouseout event to hover_element
         if(hover_element) {
           hover_element.classList.remove("__hover_highlight__qcr");
         }
